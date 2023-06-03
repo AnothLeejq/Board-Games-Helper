@@ -11,7 +11,7 @@ Board Games Helper is a web-based tool, its target is to make GM job easier. Thi
 
 ## Current progress
 
-Werewolf: The main game flow is done, the games' log feature is coming. 
+Werewolf: Game logs request & download is available now. 
 
 ## How to set up
 
@@ -66,6 +66,9 @@ The day comes when all the character finish there mandatory actions at night. Du
 The game ends when one of the end game condition is met. (e.g. all the werewolves were killed or voted out of the game)
 
 <img width="854" alt="6" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/b07822ff-666e-45dd-8307-42fca984c655">
+<img width="504" alt="7" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/2ac24eb0-e08a-42c1-bee6-ac70e7430336">
 
-+ **Request logs**: ***[Havn't finished!]*** You can click this button to request a log of last game including all the players' info, everyone's actions per day and night.
+
++ **Request logs**: You can click this button to request a log of last game including all the players' info, everyone's actions per day and night.
++ **Logs download**: Every game log can be downloaded as local document after requesting.
 + **Restart**: You can restart a new game and go back to configuration page.
