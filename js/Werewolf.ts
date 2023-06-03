@@ -1,3 +1,4 @@
+
 interface spCharacter{
     name:string,
     outName:string,
@@ -20,7 +21,7 @@ function createCharacter(name:string,outName:string,explaination:string,side:str
 
 //Prepare the variables needed
 const spCharacters:spCharacter[] = [];
-let dayIcon:HTMLElement;
+let dayIcon:HTMLElement,logHTML:HTMLElement,downloadLink:HTMLElement;
 //Game rules
 const gameRules:object[] = [];
 gameRules.push({"id":"r1","explaination":"Rule 1 [Werewolves win when number of werewolves equals to Villagers left]"});
@@ -70,6 +71,8 @@ function findSpCharacter(query:object):any{
 //Execute when loading
 window.onload = function(){
     dayIcon = document.getElementById("day")!;
+    logHTML = document.getElementById("log")!;
+    downloadLink = document.getElementById("download")!;
     reset();
     let spcsRefHTML:string="<p><fieldset><legend>References for Special Roles</legend>";
     for(let i=0;spCharacters[i];++i){

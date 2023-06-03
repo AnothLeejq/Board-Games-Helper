@@ -1,5 +1,6 @@
 import { spawnSync } from "child_process";
 
+
 interface player{
     id:number,
     role:string,
@@ -21,41 +22,37 @@ function resetPlayer(target:player,variableType:string,newValue:any):void{
     if(variableType==="role"){target.role=newValue;}
     if(variableType==="alive"){target.alive=newValue;
     if(newValue===false){
+        actionsList.push(createAction([target.id],target.role,"die",[]));
         //couple die together
-        if(cupid_bind.includes(target)){cupid_bind[0].alive=false;cupid_bind[1].alive=false;cupid_bind=[];}
+        if(cupid_bind.includes(target)){let nextDie:player=(target===cupid_bind[0]?cupid_bind[1]:cupid_bind[0]);cupid_bind=[];actionsList.push(createAction([nextDie.id],nextDie.role,"martyrdom",[target.id]));resetPlayer(nextDie,"alive",false);}
         //wild kid turn into werewolf
-        if(round<=2&&wkid_example.includes(target)){resetPlayer(spcSelected["Wild Kid"],"side","werewolves");}
-        //decrease the number of player of side
-        if(target.side==="werewolves"||target.role==="Werewolf"||findSpCharacter({"outName":target.role,"target":"side"}) === "werewolves"){wolfNum-=1;}else{villagersNum-=1;}
-        if(target.role==="Villager"){n_villagersNum-=1;}
-            
-        
+        if(round<=2&&wkid_example.includes(target)&&spcSelected["Wild Kid"].alive){resetPlayer(spcSelected["Wild Kid"],"side","werewolves");actionsList.push(createAction([target.id],target.role,"transformed",[spcSelected["Wild Kid"].id]));}   
     }}
     if(variableType==="side"){target.side=newValue;}
 }
 
 interface action{
-    order:number,
     day:number,
     isDay:boolean,
+    action_role:string,
     action_players:number[],
     action_type:string,
-    action_target:number
+    action_target:number[]
 }
 
 interface gameLogs{
-    id:number,
+    id:string,
     playersNum:number,
     rule:number,
     spcSet:string[],
     logs:action[]
 }
 
-function createAction(order:number,action_players:number[],action_type:string,action_target:number):action{
+function createAction(action_players:number[],action_role:string,action_type:string,action_target:number[]):action{
     return {
-        order:order,
         day:round,
         isDay:day,
+        action_role:action_role,
         action_players:action_players,
         action_type:action_type,
         action_target:action_target
@@ -64,7 +61,7 @@ function createAction(order:number,action_players:number[],action_type:string,ac
 
 function createGameLogs(spcSet:string[],logs:action[]):gameLogs{
     return {
-        id:0,//temp
+        id:Date().split(" GMT")[0].split(" ").join("-"),
         playersNum:players.length,
         rule:ruleId,
         spcSet:spcSet,
@@ -72,6 +69,55 @@ function createGameLogs(spcSet:string[],logs:action[]):gameLogs{
     }
 }
 
+function writeFile(log:gameLogs):string{
+    let content:string="",wolvesId:number[]=[];
+    for(let i=0;werewolves[i];++i){
+        wolvesId.push(werewolves[i].id);
+    }
+    //Title
+    content+=`Game logs\t${log.id}\nPlayers:${log.playersNum}\tRule:${log.rule}\nSpecial roles:${log.spcSet}\nWerewolves:${wolvesId}`;
+    //Detailed logs
+    for(let i=0;log.logs[i];++i){
+        let action:action=log.logs[i];
+        if(action.action_type==="win"){
+            //actionsList.push(createAction([],winSide,"win",[]));
+            content+=`\nGame ended, ${action.action_role} won.`;
+        }
+        else if(action.action_type==="die"){
+            //actionsList.push(createAction(dyingPlayer,dyingPlayer.role,"die",[]));
+            content+=`\nPlayer ${action.action_players} (${action.action_role}) died.`;
+        }
+        else if(action.action_type==="switch"){
+            //actionsList.push(createAction([],"night","switch",[]));
+            content+=`\n---Day ${action.day}(${action.action_role})---`;
+        }
+        else if(action.action_type==="transformed"){
+            //actionsList.push(createAction(dyingPlayer,"dyingPlayer.role","transformed",wildkid));
+            content+=`\nThe wild kid (Player ${action.action_target}) joined werewolves for death of Player ${action.action_players}.`;
+        }
+        else if(action.action_type==="martyrdom"){
+            //actionsList.push(createAction(dyingPlayer,"dyingPlayer.role","martyrdom",whodiefor));
+            content+=`\nPlayer ${action.action_players} (${action.action_role}) committed suicide for Player ${action.action_target}'s death.`;
+        }
+        else if(action.action_type==="voted"){
+            //actionsList.push(createAction(dyingPlayer,"dyingPlayer.role","martyrdom",whodiefor));
+            content+=`\nPlayer ${action.action_players} (${action.action_role}) was voted to execute.`;
+        }
+        else if(action.action_type==="exploded"){
+            //actionsList.push(createAction(dyingPlayer,"dyingPlayer.role","martyrdom",whodiefor));
+            content+=`\nPlayer ${action.action_players} (${action.action_role}) exploded.`;
+        }
+        else{
+            content+=`\n${action.action_role} (Player ${action.action_players}) ${action.action_type} Player ${action.action_target}`;
+        }
+    }
+    logHTML.innerText=content;
+
+
+    let hrefStr:string=`<p><a href="data:text/plain;base64,${btoa(content)}" download="BGHelper-Werewolf-${log.id}.txt">Download</a></p>`;
+    downloadLink.innerHTML=hrefStr;
+    return hrefStr;
+}
 
 //Prepare the game data
 
@@ -99,11 +145,11 @@ let cupid_bind:player[];
 let guard_target:number,guard_actioned:boolean;
 //System data
 let lastWordCount:number=-1;let winSide:string="";
+let actionsList:action[];
 
-
-function reset(){
+export function reset(){
     //reset all the variables
-    dayIcon.innerText= "";
+    dayIcon.innerText= "";actionsList=[];logHTML.innerText="";downloadLink.innerHTML="";
     players =[],werewolves = [];villagers = [];spcSelected={};playersList={};cupid_bind=[];wkid_example=[];witch_potions = {"potion":1,"poison":1};hunter_able=true;winSide="";
     round=1,day=false;werewolves_target=[];seer_target=0;seer_actioned=false;werewolves_actioned=false;witch_actioned=false;guard_target=0;guard_actioned=false;lastWordCount=-1;
     wolfNum=0;villagersNum=0;n_villagersNum=0;
@@ -257,6 +303,7 @@ function startConfirmed(){
     charactersHTML+="<p><button onclick=\"next()\">Next>></button></p>";
     document.getElementById("characters")!.innerHTML=charactersHTML;
     dayIcon.innerText = `Day ${round} - 🌙`;
+    actionsList.push(createAction([],"night","switch",[]));
 }
 
 function next(stage:string=""){
@@ -286,6 +333,7 @@ function next(stage:string=""){
             next("SeerCheck");
             return;
         }
+        actionsList.push(createAction([],"day","switch",[]));
         nightEnd();
         return;
     }
@@ -319,6 +367,7 @@ function next(stage:string=""){
             cupid_bind=[playersList[cupidLink1],playersList[cupidLink2]];
             charactersHTML=getPlayersInfo(players);//User status updated here, need to update to the interface.
             charactersHTML+=`<p><button onclick=\"next()\">Next>></button></p>`;
+            actionsList.push(createAction([spcSelected["Cupid"].id],spcSelected["Cupid"].role,"linked",[cupidLink1,cupidLink2]));
         }
 
         //Wild Kid
@@ -337,6 +386,7 @@ function next(stage:string=""){
             wkid_example=[playersList[wkExample]];
             charactersHTML=getPlayersInfo(players);//User status updated here, need to update to the interface.
             charactersHTML+=`<p><button onclick=\"next()\">Next>></button></p>`;
+            actionsList.push(createAction([spcSelected["Wild Kid"].id],spcSelected["Wild Kid"].role,"decided to follow",[wkExample]));
         }
 
         //Werewolves
@@ -357,7 +407,11 @@ function next(stage:string=""){
             charactersHTML=getPlayersInfo(players);//User status updated here, need to update to the interface.
             werewolves_actioned=true;
             charactersHTML+=`<p><button onclick=\"next()\">Next>></button></p>`;
-
+            let wolfId:number[]=[];
+            werewolves.forEach(element => {
+                wolfId.push(element.id);
+            });
+            actionsList.push(createAction(wolfId,"Werewolves","attacked",[target]));
         }
 
         //Witch
@@ -381,6 +435,7 @@ function next(stage:string=""){
             charactersHTML+=`<p><button onclick=\"next()\">Can not use posion, next>></button></p>`;
             witch_actioned = true;
             witch_potions["potion"] =0;
+            actionsList.push(createAction([spcSelected["Witch"].id],"Witch","healed",[target.id]));
         }
         if(stage==="WitchCheck2"){
             if(witch_potions["poison"]>0&&spcSelected["Witch"].alive){
@@ -402,6 +457,7 @@ function next(stage:string=""){
             else{
                 witch_poison_target = target;
                 witch_potions["poison"] =0;
+                actionsList.push(createAction([spcSelected["Witch"].id],"Witch","poisoned",[target]));
                 charactersHTML=getPlayersInfo(players);//User status updated here, need to update to the interface.
                 stageTexts=`(Witch decided to posion Player No.${target} tonight.)\nClose your eyes please, witch.`;
             }
@@ -435,6 +491,7 @@ function next(stage:string=""){
             charactersHTML=getPlayersInfo(players);//User status updated here, need to update to the interface.
             stageTexts=`(Guard decided to protect Player No.${target} tonight.)\nClose your eyes please, guard.`;
             charactersHTML+=`<p><button onclick=\"next()\">Next>></button></p>`;
+            actionsList.push(createAction([spcSelected["Guard"].id],"Guard","protected",[target]));
         }
         
         //Seer
@@ -459,6 +516,7 @@ function next(stage:string=""){
             seer_actioned=true;
             stageTexts=`(Seer decided to check Player No.${target} tonight.) \nThis player belongs to ${playersList[target].side==="werewolves"||playersList[target].role==="Werewolf"||findSpCharacter({"outName":playersList[target].role,"target":"side"}) === "werewolves"?"(👎)":"(👍)"}\nIs that clear? Close your eyes please, seer.`;
             charactersHTML+=`<p><button onclick=\"next()\">Next>></button></p>`;
+            actionsList.push(createAction([spcSelected["Seer"].id],"Seer","checked",[target]));
         }
 
         document.getElementById("characters")!.innerHTML=charactersHTML;
@@ -468,11 +526,13 @@ function next(stage:string=""){
 }
 
 function isGameEnd():boolean{
-    wolfNum = 0;
+    wolfNum = 0;villagersNum=0;n_villagersNum=0;
     for(let i = 0;players[i];++i){
         let player:player = players[i];
-        if(player.side==="werewolves"||player.role==="Werewolf"||findSpCharacter({"outName":player.role,"target":"side"}) === "werewolves"){if(player.alive){wolfNum+=1;}}            
+        if(player.side==="werewolves"||player.role==="Werewolf"||findSpCharacter({"outName":player.role,"target":"side"}) === "werewolves"){if(player.alive){wolfNum+=1;}}
+        else{if(player.alive){villagersNum+=1;if(player.role==="Villager"){n_villagersNum+=1;}}}            
     }
+    
     
     if(cupid_bind.length>0){
         let cupidWin:boolean=true;
@@ -488,15 +548,16 @@ function isGameEnd():boolean{
         }
     }
     
-    if(ruleId==1&&wolfNum>=villagersNum){
+    if(ruleId===1&&wolfNum>=villagersNum){
         winSide="Werewolves";
         return true;
     }
-    if(ruleId==2&&(n_villagersNum==0)||(villagersNum-n_villagersNum==0)){
+    
+    if(ruleId===2&&((n_villagersNum<=0)||(villagersNum-n_villagersNum<=0))){
         winSide="Werewolves";
         return true;
     }
-    if(ruleId==3&&villagersNum==0&&wolfNum>0){
+    if(ruleId===3&&(villagersNum<=0)&&wolfNum>0){
         winSide="Werewolves";
         return true;
     }
@@ -509,7 +570,12 @@ function isGameEnd():boolean{
 }
 
 function requestLog(){
-    let logsText:string="---Game Logs---";
+    let spcSelectedName:string[]=[];
+    for(const key in spcSelected){
+        spcSelectedName.push(`${key}(Player ${spcSelected[key].id})`);
+    }
+    let logsList:gameLogs = createGameLogs(spcSelectedName,actionsList);
+    writeFile(logsList);
     return;
 }
 
@@ -520,12 +586,14 @@ function dayEnd(){
     werewolves_target = [];
     seer_target = 0;
     day=false;
+    
     if(guard_target>0){if(spcSelected["Guard"].alive===false){guard_target=0;}}
     let stageTexts:string="";
     let charactersHTML:string=getPlayersInfo(players);
     
     if(isGameEnd()){
         stageTexts=`Game over. ${winSide} win!`;
+        actionsList.push(createAction([],winSide,"win",[]));
         charactersHTML+=`<p><button onclick="requestLog()">Request logs of this game</button></p>`;
         charactersHTML+=`<p><button onclick="reset()">Restart</button></p>`;
     }
@@ -533,6 +601,7 @@ function dayEnd(){
         stageTexts="The night has come. Close your eyes, everyone!";
         charactersHTML+=`<p><button onclick="next()">Next>></button></p>`;
         round+=1;
+        actionsList.push(createAction([],"night","switch",[]));
     }
     dayIcon.innerText = `Day ${round} - 🌙`;
     
@@ -550,7 +619,7 @@ function nightEnd(restart:string=""){
         witch_actioned=false;seer_actioned=false;guard_actioned=false;
         let dyingPlayers:player[]=[];
         //Witch poison player
-        if(witch_poison_target>0){dyingPlayers.push(playersList[witch_poison_target]);if(playersList[witch_poison_target].role==="Hunter"&&hunter_able){hunter_able=false;};}
+        if(witch_poison_target>0){dyingPlayers.push(playersList[witch_poison_target]);if(playersList[witch_poison_target].role==="Hunter"&&hunter_able){hunter_able=false;};witch_poison_target=0;}
         
         
         //saving judgements
@@ -565,7 +634,7 @@ function nightEnd(restart:string=""){
             }
             dyingPlayers.push(werewolves_target[i]);
         }
-        
+        werewolves_target=[];
         //execute
         let hunter_die:boolean=false;
         let stageTexts:string="The night has gone. Open your eyes, everyone!";
@@ -587,7 +656,7 @@ function nightEnd(restart:string=""){
         charactersHTML=getPlayersInfo(players);
         for(let i=0;players[i];++i){
             let dead:player=players[i];
-            if(!dead.alive){dyingIds.push(dead.id);}
+            if(dyingPlayers.includes(dead)){dyingIds.push(dead.id);}
         }
         stageTexts+=dyingIds.length>0?`\nPlayer(s) with these number(s) didn't survive last night:${dyingIds}`:`\nLast night was peaceful, no one died.`;
         if(hunter_die){
@@ -602,6 +671,7 @@ function nightEnd(restart:string=""){
         //System execute end, insert a judgement
         if(isGameEnd()){
             stageTexts=`Game over. ${winSide} win!`;
+            actionsList.push(createAction([],winSide,"win",[]));
             charactersHTML+=`<p><button onclick="requestLog()">Request logs of this game</button></p>`;
             charactersHTML+=`<p><button onclick="reset()">Restart</button></p>`;
             document.getElementById("stage")!.innerText=stageTexts;
@@ -627,6 +697,7 @@ function nightEnd(restart:string=""){
             let target:number = document.getElementById("we")?.value;
             if(target===""||target===undefined||target===null){alert("You must input a valid player number.");return;}
             if(playersList[target].alive===true&&(playersList[target].side==="werewolves"||playersList[target].role==="Werewolf"||findSpCharacter({"outName":playersList[target].role,"target":"side"}) === "werewolves")){
+                actionsList.push(createAction([target],"Werewolf","exploded",[target]));
                 resetPlayer(playersList[target],"alive",false);
                 dayEnd();
                 return;
@@ -636,6 +707,7 @@ function nightEnd(restart:string=""){
             let target:number = document.getElementById("wwking")?.value;
             if(target===""||target===undefined||target===null){alert("You must input a valid player number.");return;};
             if(playersList[target].alive===true&&playersList[target].role!=="White Wolf King"){
+                actionsList.push(createAction([spcSelected["White Wolf King"].id],"White Wolf King","exploded and killed",[target]));
                 resetPlayer(playersList[target],"alive",false);
                 resetPlayer(spcSelected["White Wolf King"],"alive",false);
                 dayEnd();
@@ -646,6 +718,7 @@ function nightEnd(restart:string=""){
             let target:number = document.getElementById("hunter")?.value;
             if(target===""||target===undefined||target===null){alert("You must input a valid player number.");return;};
             if(playersList[target].alive===true){
+                actionsList.push(createAction([spcSelected["Hunter"].id],"Hunter","died and shot",[target]));
                 resetPlayer(playersList[target],"alive",false);
                 let stageTexts:string= `(Hunter shooted Player No.${target} to die with him.)`;
                 hunter_able = false;
@@ -660,6 +733,7 @@ function nightEnd(restart:string=""){
             let target:number = document.getElementById("hunter")?.value;
             if(target===""||target===undefined||target===null){alert("You must input a valid player number.");return;};
             if(playersList[target].alive===true){
+                actionsList.push(createAction([spcSelected["Hunter"].id],"Hunter","died and shot",[target]));
                 resetPlayer(playersList[target],"alive",false);
                 hunter_able = false;
                 dayEnd();
@@ -688,7 +762,9 @@ function nightEnd(restart:string=""){
             if(target===""||target===undefined||target===null){alert("You must input a valid player number.");return;};
             if(playersList[target].alive===true){
                 day=false;
+                actionsList.push(createAction([target],playersList[target].role,"voted",[]));
                 resetPlayer(playersList[target],"alive",false);
+                
                 if(playersList[target].role==="Hunter"){
                     let stageTexts:string="A hunter was voted to die! Hunter, please select a player to bring with you to death.";
                     charactersHTML=getPlayersInfo(players);

@@ -9,7 +9,7 @@ function createCharacter(name, outName, explaination, side) {
 }
 //Prepare the variables needed
 var spCharacters = [];
-var dayIcon;
+var dayIcon, logHTML, downloadLink;
 //Game rules
 var gameRules = [];
 gameRules.push({ "id": "r1", "explaination": "Rule 1 [Werewolves win when number of werewolves equals to Villagers left]" });
@@ -65,6 +65,8 @@ function findSpCharacter(query) {
 //Execute when loading
 window.onload = function () {
     dayIcon = document.getElementById("day");
+    logHTML = document.getElementById("log");
+    downloadLink = document.getElementById("download");
     reset();
     var spcsRefHTML = "<p><fieldset><legend>References for Special Roles</legend>";
     for (var i = 0; spCharacters[i]; ++i) {
