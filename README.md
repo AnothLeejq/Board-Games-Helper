@@ -16,7 +16,7 @@ Werewolf: Game logs request & download is available now.
 ## How to set up
 
 1. Download all the file and open "template/index.html" with your browser (Confirmed supported browser: Edge, Wavebrowser or Google Chrome).
-2. Select the game you are going to player then set the key parameters applied for this game following the guide of the interface.
+2. Select the game you are going to play then set the key parameters applied for this game following the guide of the interface.
 3. Enjoy your game :) You can host the game by only read the text shown in the interface and input the key value after your players make selections.
 
 ## Board Games supported
@@ -72,3 +72,12 @@ The game ends when one of the end game condition is met. (e.g. all the werewolve
 + **Request logs**: You can click this button to request a log of last game including all the players' info, everyone's actions per day and night.
 + **Logs download**: Every game log can be downloaded as local document after requesting.
 + **Restart**: You can restart a new game and go back to configuration page.
+
+### Avalon
+
+Avalon (full name: Resistance Avalon) is a board game with the background of Arthur's legend. For basic introduction of the rule please refer: https://www.ultraboardgames.com/avalon/game-rules.php?utm_content=cmp-true
+
+There are four extra characters can be added to the game: Percival, Mordred, Oberon and Morgana.
+
+**1. Before starting**
+
