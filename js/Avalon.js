@@ -10,10 +10,10 @@ var playerNum = 5, questProgress, questLeaderId, roleMerlinId;
 var winSide, avalon_selectedSpcGroup, leaderVoteTime;
 var avalon_header, avalon_GMscript, avalon_characters;
 var avalon_spCharacters = [];
-avalon_spCharacters.push({ "name": "Percival", "explaination": "Percival is on the side of Good. <br>Percival's special power is knowledge of Merlin at the start of the game.<br>*Note: for games of 5 players, you must add either Mordred or Morgana when playing with Percival." });
-avalon_spCharacters.push({ "name": "Mordred", "explaination": "Mordred is on the side of Evil. <br>His special power is that his identity is not revealed to Merlin at the start of the game." });
-avalon_spCharacters.push({ "name": "Oberon", "explaination": "Oberon is on the side of Evil. <br>His special power is that he does not reveal himself to the other evil players, nor does he gain knowledge of the other evil players at the start of the game.<br>Oberon is not a \"minion of mordred\" and does not open his eyes during the reveal at the start of the game." });
-avalon_spCharacters.push({ "name": "Morgana", "explaination": "Morgana is on the side of evil. <br>Her power is that she appears to be Merlin - revealing herself to Percival as Merlin." });
+avalon_spCharacters.push({ "name": "Percival", "explaination": "Percival is on the side of Good. \nPercival's special power is knowledge of Merlin at the start of the game.\n*Note: for games of 5 players, you must add either Mordred or Morgana when playing with Percival." });
+avalon_spCharacters.push({ "name": "Mordred", "explaination": "Mordred is on the side of Evil. \nHis special power is that his identity is not revealed to Merlin at the start of the game." });
+avalon_spCharacters.push({ "name": "Oberon", "explaination": "Oberon is on the side of Evil. \nHis special power is that he does not reveal himself to the other evil players, nor does he gain knowledge of the other evil players at the start of the game.\nOberon is not a \"minion of mordred\" and does not open his eyes during the reveal at the start of the game." });
+avalon_spCharacters.push({ "name": "Morgana", "explaination": "Morgana is on the side of evil. \nHer power is that she appears to be Merlin - revealing herself to Percival as Merlin." });
 function avalon_showExplaination(name) {
     var element = avalon_spCharacters[0];
     for (var i = 0; i < avalon_spCharacters.length; i++) {
