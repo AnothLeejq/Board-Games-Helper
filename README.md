@@ -16,7 +16,7 @@ Werewolf: Game logs request & download is available now.
 ## How to set up
 
 1. Download all the file and open "template/index.html" with your browser (Confirmed supported browser: Edge, Wavebrowser or Google Chrome).
-2. Select the game you are going to player then set the key parameters applied for this game following the guide of the interface.
+2. Select the game you are going to play then set the key parameters applied for this game following the guide of the interface.
 3. Enjoy your game :) You can host the game by only read the text shown in the interface and input the key value after your players make selections.
 
 ## Board Games supported
@@ -30,6 +30,8 @@ There are six special characters for now (Seer is a must in default so not inclu
 **1. Before starting**
 
 Before you start a game, you need to finish configuration. After finishing the configuration you'll have chance to confirm it.
+
+***You need to order and spread character cards following the order of the formed table.***
 
 <img width="873" alt="1" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/78522e16-02ea-4d8a-9ecb-a623f33e4c01">
 
@@ -71,4 +73,59 @@ The game ends when one of the end game condition is met. (e.g. all the werewolve
 
 + **Request logs**: You can click this button to request a log of last game including all the players' info, everyone's actions per day and night.
 + **Logs download**: Every game log can be downloaded as local document after requesting.
++ **Restart**: You can restart a new game and go back to configuration page.
+
+### Avalon
+
+Avalon (full name: Resistance Avalon) is a board game with the background of Arthur's legend. For basic introduction of the rule please refer: https://www.ultraboardgames.com/avalon/game-rules.php?utm_content=cmp-true
+
+There are four extra characters can be added to the game: Percival, Mordred, Oberon and Morgana.
+
+**1. Before starting**
+
+Before you start a game, you need to finish configuration. After finishing the configuration you'll have chance to confirm it until you confirm the player number of Merlin.
+
+***No need for give the players character cards in order, just spread it randomly.***
+
+<img width="395" alt="1" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/118adeea-2ea4-4a76-ab34-9b9d34dbe56c">
+
++ **Player number**: Define the number of players, ***GM is not included***. Number of players should be 5-10, it affects the rule of the game, e.g. condition of quests.
++ **Options of special roles**: Tick the checkboxes to add extra roles to the game, you can click buttons below to confirm the infomation of each extra role.
+
+**2. Role confirmation**
+
+GM should read the GM scripts to tell the players what to do line by line and do not forget to wait for corresponding actions before reading last line.
+During this phrase GM will need to input who Merlin is.
+
+<img width="394" alt="2" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/ae664ecb-e4c0-47b0-a4ee-0017961e40c3">
+
++ **GM scripts**: The scripts that GM should read, ***(do not read the content inside the brackets like this)***.
++ **Merlin's id**: When Merlin open his eyes, GM should fill the id of Merlin in the blank and click button (confirm) to confirm the whole game's setting. To return to config page you should click (cancel).
+
+**3. Quests**
+
+The main part of the gameplay is forming groups and finishing quests.
+
+<img width="400" alt="3" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/c4ef48bd-a7ba-48db-8460-5a663c209c5e">
+
++ **Team vote**: Before every quest start the player will need to be leader in turns and form a group with some players for the current quest. Then all the players have to vote for this idea (approve or reject). As the picture above mentioned, GM should click (approve) if the number of approve votes is more than those of reject votes, otherwise GM should click (Reject) to continue team vote and pass the leadership to next player.
+
+<img width="395" alt="4" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/34006e9b-e81e-4494-b6b0-ab2306eb20ff">
+
++ **Quest vote**: After forming a group the current quest starts. GM should collect vote tokens from group members and input the number of reject votes are collected.
+
+<img width="408" alt="5" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/fa1a6671-31f0-44fc-9f58-fc7f1701b75b">
+
++ **Quest results**: If the number of reject votes of a quest reach a exact number (normally 1), this quest will fail and it means that at least one of the players in this group belongs to evil as only players from evil side can vote for failure.
+
+<img width="413" alt="6" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/2666d3a2-746e-4b0e-bc6b-76cdb5ed3990">
+
++ **Evils' last chance**: The goods win with three successful quests. However, the assassin from evil side will be revealed and he is going to name Merlin. GM should input the player number pointed out by assassin.
+
+**4. End**
+
+Good side wins the game with three completed quests and protecting Merlin from being identified by assassin.
+
+Evil side wins the game if three quests failed, assassin identified Merlin, or five rejects in single team vote phrase.
+
 + **Restart**: You can restart a new game and go back to configuration page.
