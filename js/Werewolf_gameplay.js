@@ -74,7 +74,7 @@ function writeFile(log) {
         }
         else if (action.action_type === "switch") {
             //actionsList.push(createAction([],"night","switch",[]));
-            content += "\n---Day ".concat(action.day, "(").concat(action.action_role, ")---");
+            content += "\nDay ".concat(action.day, "(").concat(action.action_role, ")");
         }
         else if (action.action_type === "transformed") {
             //actionsList.push(createAction(dyingPlayer,"dyingPlayer.role","transformed",wildkid));
@@ -200,10 +200,11 @@ function reset() {
 }
 exports.reset = reset;
 function getPlayersInfo(players) {
-    var charactersHTML = "<table><tr><td>---No.---</td><td>---Role---</td><td>---Status---</td><td>---Side---</tr>";
+    var charactersHTML = "<table><tr><th>No.</th><th>Role</th><th>Status</th><th>Side</th></tr>";
     for (var i = 0; players[i]; ++i) {
         var player = players[i];
-        charactersHTML += "<tr><td>".concat(player.id, "</td><td>").concat(player.role, "</td><td>").concat((player.alive ? (cupid_bind.includes(player) ? "🥰" : player.side === "werewolves" ? "🐺" : "😊") : "💀") + (werewolves_target.includes(player) ? "🎯" : "") + (guard_target == player.id ? "🛡️" : "") + (witch_potion_target == player.id ? "💊" : (witch_poison_target == player.id ? "☠️" : "")) + (seer_target == player.id ? "🔍" : ""), "</td><td>").concat(player.side, "</td></tr>");
+        var rowLabel = (player.alive ? (player.side === "werewolves" ? "badtr" : "goodtr") : "deadtr");
+        charactersHTML += "<tr class=\"".concat(rowLabel, "\"><td>").concat(player.id, "</td><td>").concat(player.role, "</td><td>").concat((player.alive ? (cupid_bind.includes(player) ? "🥰" : player.side === "werewolves" ? "🐺" : "😊") : "💀") + (werewolves_target.includes(player) ? "🎯" : "") + (guard_target == player.id ? "🛡️" : "") + (witch_potion_target == player.id ? "💊" : (witch_poison_target == player.id ? "☠️" : "")) + (seer_target == player.id ? "🔍" : ""), "</td><td>").concat(player.side, "</td></tr>");
     }
     charactersHTML += "</table>";
     return charactersHTML;
@@ -294,14 +295,14 @@ function gameStart(rule, playersNum, spcs, spw) {
     }
     players.sort(function (a, b) { return a.id - b.id; });
     charactersHTML += getPlayersInfo(players);
-    charactersHTML += "<p><button onclick=\"startConfirmed()\">Let's get started!</button><br /><br /><button onclick=\"reset()\">Cancel</button></p>";
+    charactersHTML += "<p><button class=\"buttonnext\" onclick=\"startConfirmed()\">Let's get started!</button><br /><br /><button class=\"buttoncancel\" onclick=\"reset()\">Cancel</button></p>";
     document.getElementById("characters").innerHTML = charactersHTML;
 }
 function startConfirmed() {
     var stageHTML = "(Click \"next\" button below to start a game.)\nNow the night is coming, everyone close your eyes!";
     document.getElementById("stage").innerText = stageHTML;
     var charactersHTML = getPlayersInfo(players);
-    charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+    charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
     document.getElementById("characters").innerHTML = charactersHTML;
     dayIcon.innerText = "Day ".concat(round, " - \uD83C\uDF19");
     actionsList.push(createAction([], "night", "switch", []));
@@ -345,7 +346,7 @@ function next(stage) {
         if (stage === "CupidCheck") {
             stageTexts_1 = "Open your eyes, Cupid. Please link two players whom you want to make to be couple.";
             charactersHTML += "<p>Cupid(Player No.".concat(spcSelected["Cupid"].id, ") links <input id=\"cupid1\" type=\"number\" min=1 max=").concat(players.length, "> and <input id=\"cupid2\" type=\"number\" min=1 max=").concat(players.length, "></p>");
-            charactersHTML += "<p><button onclick=\"next('Cupid')\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next('Cupid')\">Next>></button></p>";
         }
         if (stage === "Cupid") {
             var cupidLink1 = (_a = document.getElementById("cupid1")) === null || _a === void 0 ? void 0 : _a.value;
@@ -378,14 +379,14 @@ function next(stage) {
             }
             cupid_bind = [playersList[cupidLink1], playersList[cupidLink2]];
             charactersHTML = getPlayersInfo(players); //User status updated here, need to update to the interface.
-            charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             actionsList.push(createAction([spcSelected["Cupid"].id], spcSelected["Cupid"].role, "linked", [cupidLink1, cupidLink2]));
         }
         //Wild Kid
         if (stage === "WildKidCheck") {
             stageTexts_1 = "Open your eyes, Wild Kid. Please select a player who you want to follow.";
             charactersHTML += "<p>Wild Kid(Player No.".concat(spcSelected["Wild Kid"].id, ") decide to follow Player No.<input id=\"wkid\" type=\"number\" min=1 max=").concat(players.length, "></p>");
-            charactersHTML += "<p><button onclick=\"next('WildKid')\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next('WildKid')\">Next>></button></p>";
         }
         if (stage === "WildKid") {
             var wkExample = (_c = document.getElementById("wkid")) === null || _c === void 0 ? void 0 : _c.value;
@@ -405,7 +406,7 @@ function next(stage) {
             }
             wkid_example = [playersList[wkExample]];
             charactersHTML = getPlayersInfo(players); //User status updated here, need to update to the interface.
-            charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+            charactersHTML += "<p><class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             actionsList.push(createAction([spcSelected["Wild Kid"].id], spcSelected["Wild Kid"].role, "decided to follow", [wkExample]));
         }
         //Werewolves
@@ -416,7 +417,7 @@ function next(stage) {
             }
             stageTexts_1 += "\nPlease select a player who you want to kill.";
             charactersHTML += "<p>Werewolves pack decide to kill Player No.<input id=\"kill\" type=\"number\" min=1 max=".concat(players.length, "></p>");
-            charactersHTML += "<p><button onclick=\"next('Werewolves')\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next('Werewolves')\">Next>></button></p>";
         }
         if (stage === "Werewolves") {
             var target = (_d = document.getElementById("kill")) === null || _d === void 0 ? void 0 : _d.value;
@@ -429,7 +430,7 @@ function next(stage) {
             werewolves_target = [playersList[target]];
             charactersHTML = getPlayersInfo(players); //User status updated here, need to update to the interface.
             werewolves_actioned = true;
-            charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             var wolfId_1 = [];
             werewolves.forEach(function (element) {
                 wolfId_1.push(element.id);
@@ -441,11 +442,11 @@ function next(stage) {
             stageTexts_1 = "Open your eyes, Witch.";
             if (witch_potions["potion"] > 0 && spcSelected["Witch"].alive) {
                 stageTexts_1 += "\nYou have a bottle of potion.\nAnd this player is dying tonight (No.".concat(werewolves_target[0].id, " ,GM should tell witch without making noise).\nAre you going to save?");
-                charactersHTML += "<p><button onclick=\"next('Witch1')\">Heal!</button><br /><button onclick=\"next('WitchCheck2')\">No</button></p>";
+                charactersHTML += "<p><class=\"buttonnext\" onclick=\"next('Witch1')\">Heal!</button><br /><button class=\"buttoncancel\" onclick=\"next('WitchCheck2')\">No</button></p>";
             }
             else {
                 stageTexts_1 += "\nYou have a bottle of potion.\nAnd this player is dying tonight (Witch is unable to know this as she has no potion or dies).\nAre you going to save?\n\n(Yes, it's no use to say but GM should read these as normal or other players will know the status of witch.)";
-                charactersHTML += "<p><button onclick=\"next('WitchCheck2')\">Do not have potion or dies, next>></button></p>";
+                charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next('WitchCheck2')\">Do not have potion or dies, next>></button></p>";
             }
         }
         if (stage === "Witch1") {
@@ -453,7 +454,7 @@ function next(stage) {
             witch_potion_target = target.id;
             stageTexts_1 = "(Witch healed Player No.".concat(witch_potion_target, ", so she can not use poison toight. But GM still need to read the sentence below as normal. Or other player will know the status of witch.) \nYou have a bottle of poison, who are you going to poison?\n(Wait for a while then say)\nClose your eyes please, witch.");
             charactersHTML = getPlayersInfo(players); //User status updated here, need to update to the interface.
-            charactersHTML += "<p><button onclick=\"next()\">Can not use posion, next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Can not use posion, next>></button></p>";
             witch_actioned = true;
             witch_potions["potion"] = 0;
             actionsList.push(createAction([spcSelected["Witch"].id], "Witch", "healed", [target.id]));
@@ -462,12 +463,12 @@ function next(stage) {
             if (witch_potions["poison"] > 0 && spcSelected["Witch"].alive) {
                 stageTexts_1 = "You have a bottle of poison, who are you going to poison?\n(GM should input 0 or leave blank if witch don't want to posion anyone tonight.)";
                 charactersHTML += "<p>Witch (Player No.".concat(spcSelected["Witch"].id, ") decide to poison Player No.<input id=\"poison\" type=\"number\" min=0 max=").concat(players.length, "></p>");
-                charactersHTML += "<p><button onclick=\"next('Witch2')\">Next>></button></p>";
+                charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next('Witch2')\">Next>></button></p>";
             }
             else {
                 stageTexts_1 = "You have a bottle of poison, who are you going to poison?\n(Yes, witch has no posion or dies, however GM should still say this to prevent other players from knowing the status of witch.)";
                 witch_actioned = true;
-                charactersHTML += "<p><button onclick=\"next()\">Do not have poison or dies, next>></button></p>";
+                charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Do not have poison or dies, next>></button></p>";
             }
         }
         if (stage === "Witch2") {
@@ -482,7 +483,7 @@ function next(stage) {
                 charactersHTML = getPlayersInfo(players); //User status updated here, need to update to the interface.
                 stageTexts_1 = "(Witch decided to posion Player No.".concat(target, " tonight.)\nClose your eyes please, witch.");
             }
-            charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             witch_actioned = true;
         }
         //Guard
@@ -493,13 +494,13 @@ function next(stage) {
                     stageTexts_1 += "\n(Last night, guard protected Player No.".concat(guard_target, ")");
                 }
                 charactersHTML += "<p>Guard (Player No.".concat(spcSelected["Guard"].id, ") decide to protect Player No.<input id=\"guard\" type=\"number\" min=1 max=").concat(players.length, "></p>");
-                charactersHTML += "<p><button onclick=\"next('Guard')\">Next>></button></p>";
+                charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next('Guard')\">Next>></button></p>";
             }
             else {
                 stageTexts_1 += "\n(Guard is dead, but GM need to say as if guard is alive.)\nClose your eyes please, guard.";
                 guard_target = 0;
                 guard_actioned = true;
-                charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+                charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             }
         }
         if (stage === "Guard") {
@@ -518,7 +519,7 @@ function next(stage) {
             guard_actioned = true;
             charactersHTML = getPlayersInfo(players); //User status updated here, need to update to the interface.
             stageTexts_1 = "(Guard decided to protect Player No.".concat(target, " tonight.)\nClose your eyes please, guard.");
-            charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             actionsList.push(createAction([spcSelected["Guard"].id], "Guard", "protected", [target]));
         }
         //Seer
@@ -526,13 +527,13 @@ function next(stage) {
             stageTexts_1 = "Open your eyes, seer. Who are you going to check?";
             if (spcSelected["Seer"].alive) {
                 charactersHTML += "<p>Seer (Player No.".concat(spcSelected["Seer"].id, ") decide to check Player No.<input id=\"seer\" type=\"number\" min=1 max=").concat(players.length, "></p>");
-                charactersHTML += "<p><button onclick=\"next('Seer')\">Next>></button></p>";
+                charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next('Seer')\">Next>></button></p>";
             }
             else {
                 seer_target = 0;
                 stageTexts_1 += "\n(Seer is dead, but GM need to say as if seer is alive.)\nThis player belongs to (Stop and do nothing for a while)\nIs that clear? Close your eyes please, seer.";
                 seer_actioned = true;
-                charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+                charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             }
         }
         if (stage === "Seer") {
@@ -546,7 +547,7 @@ function next(stage) {
             charactersHTML = getPlayersInfo(players); //User status updated here, need to update to the interface.
             seer_actioned = true;
             stageTexts_1 = "(Seer decided to check Player No.".concat(target, " tonight.) \nThis player belongs to ").concat(playersList[target].side === "werewolves" || playersList[target].role === "Werewolf" || findSpCharacter({ "outName": playersList[target].role, "target": "side" }) === "werewolves" ? "(👎)" : "(👍)", "\nIs that clear? Close your eyes please, seer.");
-            charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+            charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
             actionsList.push(createAction([spcSelected["Seer"].id], "Seer", "checked", [target]));
         }
         document.getElementById("characters").innerHTML = charactersHTML;
@@ -634,7 +635,7 @@ function dayEnd() {
     }
     else {
         stageTexts = "The night has come. Close your eyes, everyone!";
-        charactersHTML += "<p><button onclick=\"next()\">Next>></button></p>";
+        charactersHTML += "<p><button class=\"buttonnext\" onclick=\"next()\">Next>></button></p>";
         round += 1;
         actionsList.push(createAction([], "night", "switch", []));
     }
@@ -704,7 +705,7 @@ function nightEnd(restart) {
         if (hunter_die) {
             stageTexts_2 += "\nA hunter died! Please select a player to bring with you to death.";
             charactersHTML += "<p>Hunter is going to shoot Player No.<input id=\"hunter\" type=\"number\" min=1 max=".concat(players.length, "></p>");
-            charactersHTML += "<button onclick=\"nightEnd('hunter')\">Hunter shoot</button></p>";
+            charactersHTML += "<button class=\"buttonnext\" onclick=\"nightEnd('hunter')\">Hunter shoot</button></p>";
             document.getElementById("stage").innerText = stageTexts_2;
             document.getElementById("characters").innerHTML = charactersHTML;
             return;
@@ -722,11 +723,11 @@ function nightEnd(restart) {
         //Game not end
         if ("White Wolf King" in spcSelected && spcSelected["White Wolf King"].alive) {
             charactersHTML += "<p>Fill in this blank and skip voting & last word when White Wolf King spelled his skill \u27A1\uFE0F Player No.<input id=\"wwking\" type=\"number\" min=1 max=".concat(players.length, ">");
-            charactersHTML += "<button onclick=\"nightEnd('ww_explode')\">White Wolf Explode</button></p>";
+            charactersHTML += "<button class=\"buttonnext\" onclick=\"nightEnd('ww_explode')\">White Wolf Explode</button></p>";
         }
         charactersHTML += "<p>Fill in this blank and skip voting & last word when a normal werewolf explode \u27A1\uFE0F Player No. of the exploded werewolf:<input id=\"we\" type=\"number\" min=1 max=".concat(players.length, ">");
-        charactersHTML += "<button onclick=\"nightEnd('w_explode')\">Wolf Explode</button></p>";
-        charactersHTML += "<button onclick=\"nightEnd('vote')\">None of above, vote&last word>></button></p>";
+        charactersHTML += "<button class=\"buttonnext\" onclick=\"nightEnd('w_explode')\">Wolf Explode</button></p>";
+        charactersHTML += "<button class=\"buttonnext\" onclick=\"nightEnd('vote')\">None of above, vote&last word>></button></p>";
         document.getElementById("stage").innerText = stageTexts_2;
         document.getElementById("characters").innerHTML = charactersHTML;
         return;
@@ -783,7 +784,7 @@ function nightEnd(restart) {
                 var stageTexts_3 = "(Hunter shooted Player No.".concat(target, " to die with him.)");
                 hunter_able = false;
                 charactersHTML = getPlayersInfo(players);
-                charactersHTML += "<button onclick=\"nightEnd()\">Okay, back>></button></p>";
+                charactersHTML += "<button class=\"buttonnext\" onclick=\"nightEnd()\">Okay, back>></button></p>";
                 document.getElementById("stage").innerText = stageTexts_3;
                 document.getElementById("characters").innerHTML = charactersHTML;
             }
@@ -828,7 +829,7 @@ function nightEnd(restart) {
                 stageTexts_4 += "\nUnfortunately, no last word permitted.";
             }
             charactersHTML += "<p>Vote a player to execute \u27A1\uFE0F <input id=\"vote\" type=\"number\" min=1 max=".concat(players.length, ">");
-            charactersHTML += "<button onclick=\"nightEnd('voteEnd')\">Decided, next>></button></p>";
+            charactersHTML += "<button class=\"buttonnext\" onclick=\"nightEnd('voteEnd')\">Decided, next>></button></p>";
             document.getElementById("stage").innerText = stageTexts_4;
             document.getElementById("characters").innerHTML = charactersHTML;
         }
@@ -849,7 +850,7 @@ function nightEnd(restart) {
                     charactersHTML = getPlayersInfo(players);
                     charactersHTML += "<p>Hunter is going to shoot Player No.<input id=\"hunter\" type=\"number\" min=1 max=".concat(players.length, "></p>");
                     hunter_able = false;
-                    charactersHTML += "<button onclick=\"nightEnd('hunterX')\">Hunter shoot</button></p>";
+                    charactersHTML += "<button class=\"buttonnext\" onclick=\"nightEnd('hunterX')\">Hunter shoot</button></p>";
                     document.getElementById("stage").innerText = stageTexts_5;
                     document.getElementById("characters").innerHTML = charactersHTML;
                     return;

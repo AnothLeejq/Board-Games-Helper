@@ -1,7 +1,7 @@
 const gamesList:string[] = ["Werewolf","Avalon"];
 
 function addGame(name:string):void{
-    let gameButtonHTML = `<a href = "../template/${name}.html" target="_blank">${name}</a>`;
+    let gameButtonHTML = `<p><a href = "../template/${name}.html" target="_blank">${name}</a></p>`;
     let newButton = document.createElement('p');
     newButton.innerHTML = gameButtonHTML;
     document.body.appendChild(newButton);

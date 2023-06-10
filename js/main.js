@@ -1,6 +1,6 @@
 var gamesList = ["Werewolf", "Avalon"];
 function addGame(name) {
-    var gameButtonHTML = "<a href = \"../template/".concat(name, ".html\" target=\"_blank\">").concat(name, "</a>");
+    var gameButtonHTML = "<p><a href = \"../template/".concat(name, ".html\" target=\"_blank\">").concat(name, "</a></p>");
     var newButton = document.createElement('p');
     newButton.innerHTML = gameButtonHTML;
     document.body.appendChild(newButton);

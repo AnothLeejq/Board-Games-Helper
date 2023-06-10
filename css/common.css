@@ -1,0 +1,38 @@
+body {
+    background-image: url("paper.gif");
+  background-color: #cccccc;
+  }
+  
+  h1 {
+    color: rgb(0, 0, 0);
+    text-align: center;
+  }
+  
+  p {
+    font-family: verdana;
+    font-size: 15px;
+  }
+
+  table, th, td {
+    border: 1px solid;
+  }
+
+  table{
+    border-radius: 5px;
+    position: relative;
+    left:30%;
+  }
+
+  td {
+    text-align: center;
+  }
+
+  th {
+    background-color: #000000;
+    color: white;
+    text-align: center;
+  }
+
+  button{
+    border-radius: 5px;
+  }
