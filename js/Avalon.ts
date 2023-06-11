@@ -73,7 +73,7 @@ function avalon_gameStart(players:number):void{
     </p>`;
     avalon_GMscript.innerHTML=avalon_GMScriptHTML;
     avalon_characters.innerHTML=`<p>Player number of Merlin is <input type=number min=1 max=${players} id="merlin"></p>\
-    <p><button onclick=\"avalon_startConfirmed()\">confirmed</button><br><br><button onclick=\"avalon_reset()\">Cancel</button></p>`;
+    <p><button class=\"buttonapprove\" onclick=\"avalon_startConfirmed()\">confirmed</button><br><br><button class=\"buttoncancel\" onclick=\"avalon_reset()\">Cancel</button></p>`;
     playerNum=players;
 }
 
@@ -94,7 +94,7 @@ function avalon_startConfirmed():void{
         Everyone open your eyes..<br>
         </p>`;
         avalon_GMscript.innerHTML=avalon_GMScriptHTML;
-        avalon_characters.innerHTML=`<p><button onclick=\"avalon_vote(0)\">next>></button></p>`;
+        avalon_characters.innerHTML=`<p><button class=\"buttonapprove\" onclick=\"avalon_vote(0)\">next>></button></p>`;
     }
 }
 
@@ -109,8 +109,8 @@ function avalon_vote(questNumber:number):void{
     <p>(After Player No.${questLeaderId} made decision) Now everybody should vote for the decision of Player No.${questLeaderId}</p>`;
 
     avalon_GMscript.innerHTML=avalon_GMScriptHTML;
-    let avalon_charactersHTML:string=`<p>Click <button onclick=\"avalon_quest(${questNumber})\">Approve</button> if more players voted for approve than reject.</p>
-    <br>Otherwise, click <button onclick=\"avalon_vote(${questNumber})\">Reject</button></p>`;
+    let avalon_charactersHTML:string=`<p>Click <button class=\"buttonapprove\" onclick=\"avalon_quest(${questNumber})\">Approve</button> if more players voted for approve than reject.</p>
+    <br>Otherwise, click <button class=\"buttonreject\" onclick=\"avalon_vote(${questNumber})\">Reject</button></p>`;
     avalon_characters.innerHTML=avalon_charactersHTML;
     return;
 }
@@ -146,19 +146,24 @@ function avalon_run(questNumber:number):void{
     headerHTML+=`<br></fieldset>`;
     avalon_header.innerHTML=headerHTML;
     let avalon_GMScriptHTML:string=`<p>Quest ended up with ${failure<failureVote?"success✔️":"fail❌"}</p>`;
-    
+    let fail:boolean=false;
     if(sucessNum>=3){
         avalon_GMScriptHTML+=`<p>Three quests completed! The good side is about to win!<br>However, evil side have their last chance. Assassin, now you can try to point out Merlin!<br>Assassin pointed out: <input type="number" min=1 max=${playerNum} id="merlin"></p>`;
         avalon_GMScriptHTML+=`<p><button onclick=\"avalon_assassin()\">Next>></button></p>`;
     }
     else if(questNumber+1-sucessNum>=3){
+        fail=true;
         avalon_gameOver("Evil","three quests failed");
     }
     else{
         avalon_GMScriptHTML+=`<p>Discussion ended. Go to next team vote<button onclick=\"avalon_vote(${questNumber+1})\">Next>></button></p>`
     }
-    avalon_GMscript.innerHTML=avalon_GMScriptHTML;
-    avalon_characters.innerHTML="";
+
+    if(!fail){
+        avalon_GMscript.innerHTML=avalon_GMScriptHTML;
+        avalon_characters.innerHTML="";
+    }
+    
 }
 
 function avalon_assassin():void{

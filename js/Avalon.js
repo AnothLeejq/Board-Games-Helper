@@ -64,7 +64,7 @@ function avalon_gameStart(players) {
     avalon_header.innerHTML = "<p>Players: ".concat(players, ", there should be ").concat(gameSet[players - 5]["good"], " players from good side and ").concat(players - gameSet[players - 5]["good"], " players from evil side.<br>(Please prepare corresponding characters card and randomly give them to each players.)</p>");
     var avalon_GMScriptHTML = "<p>(After everyone get their card, read those lines below without brackets)<br>\n    Everyone close your eyes and extend your hand info a fist in front of you.<br>Minions of Mordred,".concat(avalon_selectedSpcGroup.includes("Oberon") ? " not Oberon," : "", " open your eyes and look around so that you know all agents of Evil..<br>Minions of Mordred close your eyes..<br>All players should have their eyes closed and hands in a fist in front of them..<br>Minions of Mordred").concat(avalon_selectedSpcGroup.includes("Mordred") ? ", not Mordred himself" : "", " - extend your thumb so that Merlin will know of you..<br>\n    Merlin, open your eyes and see the agents of evil..<br>\n    </p>");
     avalon_GMscript.innerHTML = avalon_GMScriptHTML;
-    avalon_characters.innerHTML = "<p>Player number of Merlin is <input type=number min=1 max=".concat(players, " id=\"merlin\"></p>    <p><button onclick=\"avalon_startConfirmed()\">confirmed</button><br><br><button onclick=\"avalon_reset()\">Cancel</button></p>");
+    avalon_characters.innerHTML = "<p>Player number of Merlin is <input type=number min=1 max=".concat(players, " id=\"merlin\"></p>    <p><button class=\"buttonapprove\" onclick=\"avalon_startConfirmed()\">confirmed</button><br><br><button class=\"buttoncancel\" onclick=\"avalon_reset()\">Cancel</button></p>");
     playerNum = players;
 }
 function avalon_startConfirmed() {
@@ -76,7 +76,7 @@ function avalon_startConfirmed() {
         roleMerlinId = MerlinNumber;
         var avalon_GMScriptHTML = "<p>(Read those lines below without brackets)<br>\n        Minions of Mordred - put your thumbs down and re-form your hands into a fist.<br>\n        Merlin, close your eyes..<br>\n        ".concat(avalon_selectedSpcGroup.includes("Percival") ? "Merlin".concat(avalon_selectedSpcGroup.includes("Morgana") ? " and Morgana" : "", " - extend your tumb so that Percival may know of you.<br>\n        Percival, open your eyes so you may know Merlin").concat(avalon_selectedSpcGroup.includes("Morgana") ? " and Morgana" : "", ".<br>\n        Merlin").concat(avalon_selectedSpcGroup.includes("Morgana") ? " and Morgana" : "", " - put your thumbs down and form your hand info a fist..<br>\n        Percival - close your eyes.<br>") : "", "\n        Everyone open your eyes..<br>\n        </p>");
         avalon_GMscript.innerHTML = avalon_GMScriptHTML;
-        avalon_characters.innerHTML = "<p><button onclick=\"avalon_vote(0)\">next>></button></p>";
+        avalon_characters.innerHTML = "<p><button class=\"buttonapprove\" onclick=\"avalon_vote(0)\">next>></button></p>";
     }
 }
 function avalon_vote(questNumber) {
@@ -93,7 +93,7 @@ function avalon_vote(questNumber) {
     }
     var avalon_GMScriptHTML = "<p>Here comes quest ".concat(questNumber + 1, ", <br>the leader will be Player No.").concat(questLeaderId, ". Team leader, please select ").concat(gameSet[playerNum - 5]["quests"][questNumber], " members to form your group for quest!</p>\n    <p>(After Player No.").concat(questLeaderId, " made decision) Now everybody should vote for the decision of Player No.").concat(questLeaderId, "</p>");
     avalon_GMscript.innerHTML = avalon_GMScriptHTML;
-    var avalon_charactersHTML = "<p>Click <button onclick=\"avalon_quest(".concat(questNumber, ")\">Approve</button> if more players voted for approve than reject.</p>\n    <br>Otherwise, click <button onclick=\"avalon_vote(").concat(questNumber, ")\">Reject</button></p>");
+    var avalon_charactersHTML = "<p>Click <button class=\"buttonapprove\" onclick=\"avalon_quest(".concat(questNumber, ")\">Approve</button> if more players voted for approve than reject.</p>\n    <br>Otherwise, click <button class=\"buttonreject\" onclick=\"avalon_vote(").concat(questNumber, ")\">Reject</button></p>");
     avalon_characters.innerHTML = avalon_charactersHTML;
     return;
 }
@@ -126,18 +126,22 @@ function avalon_run(questNumber) {
     headerHTML += "<br></fieldset>";
     avalon_header.innerHTML = headerHTML;
     var avalon_GMScriptHTML = "<p>Quest ended up with ".concat(failure < failureVote ? "success✔️" : "fail❌", "</p>");
+    var fail = false;
     if (sucessNum >= 3) {
         avalon_GMScriptHTML += "<p>Three quests completed! The good side is about to win!<br>However, evil side have their last chance. Assassin, now you can try to point out Merlin!<br>Assassin pointed out: <input type=\"number\" min=1 max=".concat(playerNum, " id=\"merlin\"></p>");
         avalon_GMScriptHTML += "<p><button onclick=\"avalon_assassin()\">Next>></button></p>";
     }
     else if (questNumber + 1 - sucessNum >= 3) {
+        fail = true;
         avalon_gameOver("Evil", "three quests failed");
     }
     else {
         avalon_GMScriptHTML += "<p>Discussion ended. Go to next team vote<button onclick=\"avalon_vote(".concat(questNumber + 1, ")\">Next>></button></p>");
     }
-    avalon_GMscript.innerHTML = avalon_GMScriptHTML;
-    avalon_characters.innerHTML = "";
+    if (!fail) {
+        avalon_GMscript.innerHTML = avalon_GMScriptHTML;
+        avalon_characters.innerHTML = "";
+    }
 }
 function avalon_assassin() {
     var target = document.getElementById("merlin").value;
