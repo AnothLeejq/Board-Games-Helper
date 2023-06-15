@@ -1,4 +1,4 @@
-const gamesList:string[] = ["Werewolf","Avalon"];
+const gamesList:string[] = ["Werewolf","Avalon","TickTackToe"];
 
 function addGame(name:string):void{
     let gameButtonHTML = `<p><a href = "../template/${name}.html" target="_blank">${name}</a></p>`;

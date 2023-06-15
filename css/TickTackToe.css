@@ -1,0 +1,18 @@
+
+.buttonconfirm{
+  background-color:rgb(12, 112, 12);
+  color:white;
+}
+
+.buttonNoBorder{
+  background-color: Transparent;
+  border: none;
+  outline: none;
+  height: 25px;
+  width: 25px;
+}
+
+.tr,td{
+  height: 25px;
+  width: 25px;
+}

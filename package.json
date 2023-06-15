@@ -21,6 +21,7 @@
     "react-dom": "^18.2.0"
   },
   "scripts": {
+    "ttt":"tsc js/TickTackToe.ts",
     "avalon": "tsc js/Avalon.ts",
     "werewolf": "tsc js/Werewolf.ts js/Werewolf_gameplay.ts"
   }

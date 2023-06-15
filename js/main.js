@@ -1,4 +1,4 @@
-var gamesList = ["Werewolf", "Avalon"];
+var gamesList = ["Werewolf", "Avalon", "TickTackToe"];
 function addGame(name) {
     var gameButtonHTML = "<p><a href = \"../template/".concat(name, ".html\" target=\"_blank\">").concat(name, "</a></p>");
     var newButton = document.createElement('p');
