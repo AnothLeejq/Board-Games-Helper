@@ -129,3 +129,43 @@ Good side wins the game with three completed quests and protecting Merlin from b
 Evil side wins the game if three quests failed, assassin identified Merlin, or five rejects in single team vote phrase.
 
 + **Restart**: You can restart a new game and go back to configuration page.
+
+
+### Tick-Tack-Toe
+
+This is a game without any other item requirements. Players can instantly play this game by taking actions in turns with this tool or do it via the third person.
+
+**1. Before starting**
+
+Two parameters are required to start a game. They are both 3 by default.
+
+<img width="242" alt="1" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/b0c418eb-a573-4b44-a483-d635cc3e5c95">
+
++ **Size**: Defines the size of the grid. The grid is always a quare with the length of this number. It ranges from 3 to 10 (3<=size<=10).
++ **Target**: Defines the winning condition. The first player who links his/her chess into a line with such length horizontally, vertically or diagonally wins. This number is always no smaller than 3 and no larger than current size. (3<=target<=size).
+
+
+**2. Game process&end**
+
+Once finish the config the game starts and player holding round chess (O) always goes first. By clicking blank cells in the grid player can select which cell to put a chess this turn.
+
+<img width="266" alt="2" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/3a7f4d0c-c217-4409-b441-401c98174034">
+
++ **Round**: The cell with blue color means that it is conquerred by player holding round chess.
++ **Cross**: The cell with red color means that it is conquerred by player holding cross chess.
++ **Preview**: The cell with yellow color means that it is selected temporarily by the player who is taking action this turn, player can change his/her mind before the 'confirm' button is clicked.
++ **Confirm**: Every player is required to put a chess in his/her turn. After making decision (one of the blank cells should be colored by yellow) player can click 'confirm' button to determind his/her decision and switch to next player.
+
+<img width="225" alt="4" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/5829e732-44d3-44a2-a479-dffd71704479">
+
++ **Win&lose**: After each player confirms his/her selection, the system will check if any player meets the winning condition.
++ **Draw**: When the grid is full of chesses without player having reached winning condition, this game will end up with a draw.
++ **Restart**: Click the 'restart' button for a new game, previous configs will be saved as default for next game but you are still free to modify it.
+
+**3. Further use**
+
+You can not only play Tick-Tack-Toe with Tick-Tack-Toe helper! A game with 4-line, 5-line or any other custom rules can be played by your configs before starting.
+
+<img width="331" alt="5" src="https://github.com/AnothLeejq/Board-Games-Helper/assets/68806149/18d9867b-07a7-4134-9b4c-1eadb26e084b">
+
+
