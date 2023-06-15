@@ -120,7 +120,7 @@ function cS(x, y, newStatus) {
     //alert(`x=${x},y=${y},newStatus=${newStatus}`);
     var target = ttt_grids[x][y];
     if (pre_label.includes(newStatus)) {
-        if (ttt_currentHolding[0] > 0) {
+        if (ttt_currentHolding[0] >= 0) {
             cS(ttt_currentHolding[0], ttt_currentHolding[1], "blank");
         }
         ttt_currentHolding = [x, y];
@@ -140,7 +140,7 @@ function initG(size) {
             ttt_grids.push([]);
         }
         for (var j = 0; j < size; j++) {
-            gridHTML += "<td>".concat(started ? (ttt_grids[i][j].current === "blank" ? "<button class=\"buttonNoBorder\" onclick=\"cS(".concat(i, ",").concat(j, ",'").concat(pre_label[currentP], "')\">   </button>") : ttt_grids[i][j].current) : " ", "</td>");
+            gridHTML += "<td ".concat(started ? (label.includes(ttt_grids[i][j].current) ? "class=\"grid".concat(ttt_grids[i][j].current, "\"") : (pre_label.includes(ttt_grids[i][j].current) ? "class=\"gridpre\"" : "")) : "", ">").concat(started ? (ttt_grids[i][j].current === "blank" ? "<button class=\"buttonNoBorder\" onclick=\"cS(".concat(i, ",").concat(j, ",'").concat(pre_label[currentP], "')\">   </button>") : ttt_grids[i][j].current) : " ", "</td>");
             if (!started) {
                 ttt_grids[i].push(createGrid(i, j));
             }

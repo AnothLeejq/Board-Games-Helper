@@ -16,3 +16,18 @@
   height: 25px;
   width: 25px;
 }
+
+.gridX{
+  background-color:rgb(255, 0, 0);
+  color:white;
+}
+
+.gridO{
+  background-color:rgb(0, 30, 255);
+  color:white;
+}
+
+.gridpre{
+  background-color:rgb(255, 230, 0);
+  color:rgb(0, 0, 0);
+}

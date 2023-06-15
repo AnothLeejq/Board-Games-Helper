@@ -118,7 +118,7 @@ function createGrid(x:number,y:number):grid{
 function cS(x:number,y:number,newStatus:string):void{
     //alert(`x=${x},y=${y},newStatus=${newStatus}`);
     let target:grid=ttt_grids[x][y];
-    if(pre_label.includes(newStatus)){if(ttt_currentHolding[0]>0){cS(ttt_currentHolding[0],ttt_currentHolding[1],"blank");}ttt_currentHolding=[x,y];}
+    if(pre_label.includes(newStatus)){if(ttt_currentHolding[0]>=0){cS(ttt_currentHolding[0],ttt_currentHolding[1],"blank");}ttt_currentHolding=[x,y];}
     target.current=newStatus;
     initG(cSize);
     return;
@@ -131,7 +131,7 @@ function initG(size:number):void{
         gridHTML+=`<tr>`
         if(!started){ttt_grids.push([]);}
         for(let j=0;j<size;j++){
-            gridHTML+=`<td>${started?(ttt_grids[i][j].current==="blank"?`<button class="buttonNoBorder" onclick="cS(${i},${j},'${pre_label[currentP]}')">   </button>`:ttt_grids[i][j].current):" "}</td>`;
+            gridHTML+=`<td ${started?(label.includes(ttt_grids[i][j].current)?`class="grid${ttt_grids[i][j].current}"`:(pre_label.includes(ttt_grids[i][j].current)?`class="gridpre"`:"")):""}>${started?(ttt_grids[i][j].current==="blank"?`<button class="buttonNoBorder" onclick="cS(${i},${j},'${pre_label[currentP]}')">   </button>`:ttt_grids[i][j].current):" "}</td>`;
             if(!started){ttt_grids[i].push(createGrid(i,j));}
         }
         gridHTML+=`</tr>`;
