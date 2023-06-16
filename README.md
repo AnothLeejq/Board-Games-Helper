@@ -1,5 +1,11 @@
 # Board-Games-Helper
-For walkthrough video of Werewolf Game GM Tool: https://www.loom.com/share/4c1c4aacdd4c43efa604a1c675359e87
+Walkthrough videos :
+
+Werewolf Game GM Tool: https://www.loom.com/share/4c1c4aacdd4c43efa604a1c675359e87
+
+Avalon GM Tool: https://www.loom.com/share/55d2e7180efe4fcbbfbc752f97d30f6f?sid=3e7681b7-a4e1-4d02-a6a8-9a68f00f0f10
+
+
 
 ## Main Introduction
 
